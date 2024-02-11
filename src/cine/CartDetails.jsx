@@ -9,14 +9,15 @@ import { getImgUrl } from "../utilis/cine-utility";
 
 
 export default function CartDetails({ onClose }) {
-  const { cartData, setCartData } = useContext(MovieContext);
-  function handleDeleteCart(e, itemId) {
-    e.preventDefault();
-    const filteredItem = cartData.filter((item)=>{
-      return item.id !== itemId
-    })
+  const { state, dispatch } = useContext(MovieContext);
 
-    setCartData([...filteredItem])
+  function handleDeleteCart(e, item) {
+    e.preventDefault();
+
+    dispatch({
+      type: "REMOVE_FROM_CART",
+      payload: item
+    })
 
   }
 
@@ -31,10 +32,10 @@ export default function CartDetails({ onClose }) {
 
           {
 
-            cartData.length === 0 ? 
+            state.cartData.length === 0 ? 
             (<p className="text-3xl">The Cart is Empty !</p>) :
 
-            (cartData.map(item => (
+            (state.cartData.map(item => (
               <div className="grid grid-cols-[1fr_auto] gap-4" key={item.id}>
               <div className="flex items-center gap-4">
                 <img
@@ -55,7 +56,7 @@ export default function CartDetails({ onClose }) {
               <div className="flex justify-between gap-4 items-center">
                 <button 
                 className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white"
-                onClick={(e)=>handleDeleteCart(e, item.id)}
+                onClick={(e)=>handleDeleteCart(e, item)}
                 >
                   <img className="w-5 h-5" src={Delete} alt="" />
                   <span className="max-md:hidden">Remove</span>
